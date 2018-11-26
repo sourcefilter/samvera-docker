@@ -1,0 +1,92 @@
+version: "3.6"
+
+services:
+  fcrepo:
+    image: cbeer/fcrepo4:4.7
+    expose:
+      - 8080
+    volumes:
+      - fcrepo_data:/data
+    environment:
+      - JAVA_OPTS=-Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+      # - JAVA_OPTS=${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"
+
+  db:
+    image: mysql:5.6
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+  redis:
+    image: redis:4
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  solr:
+    build:
+      context: .
+      dockerfile: Dockerfile.solr
+    volumes:
+      - solr_data:/opt/solr/server/solr/mycores/californica/data
+    ports:
+      - "8983:8983"
+
+  ursus:
+    build:
+      context: .
+      target: ursus
+    depends_on:
+      - solr
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./ursus:/ursus
+    working_dir: /ursus
+    environment:
+      DATABASE_NAME: ursus_development
+      DATABASE_HOST: db
+      DATABASE_USERNAME: ursus
+      DATABASE_PASSWORD: ursus
+      IIIF_URL: https://s-u-cantaloupe01.library.ucla.edu/cantaloupe/iiif
+      SOLR_URL: http://solr:8983/solr/californica
+    command: "bundle exec rails server"
+
+  californica:
+    build:
+      context: .
+      target: californica
+    volumes:
+      - ./californica:/californica
+    depends_on:
+      - db
+      - fcrepo
+      - redis
+      - solr
+    command: "bundle exec rails server"
+    ports:
+      - "3000:3000"
+
+  sidekiq:
+    build:
+      context: .
+      target: californica
+    volumes:
+      - ./californica:/californica
+    depends_on:
+      - db
+      - fcrepo
+      - redis
+      - solr
+    command: "bundle exec sidekiq"
+
+volumes:
+  mysql_data:
+  solr_data:
+  redis_data:
+  fcrepo_data:
