@@ -3,8 +3,8 @@ version: "3.6"
 services:
   fcrepo:
     image: cbeer/fcrepo4:4.7
-    expose:
-      - 8080
+    ports:
+      - 38080:8080
     volumes:
       - fcrepo_data:/data
     environment:
@@ -40,53 +40,73 @@ services:
   ursus:
     build:
       context: .
-      target: ursus
     depends_on:
       - solr
     ports:
       - "3003:3000"
     volumes:
       - ./ursus:/ursus
+      - bundle_dir:/bundle_dir
     working_dir: /ursus
     environment:
       DATABASE_NAME: ursus_development
       DATABASE_HOST: db
       DATABASE_USERNAME: ursus
       DATABASE_PASSWORD: ursus
-      IIIF_URL: https://s-u-cantaloupe01.library.ucla.edu/cantaloupe/iiif
       SOLR_URL: http://solr:8983/solr/californica
     command: "bundle exec rails server"
 
   californica:
     build:
       context: .
-      target: californica
-    volumes:
-      - ./californica:/californica
+    command: "bundle exec rails server"
     depends_on:
       - db
       - fcrepo
       - redis
       - solr
-    command: "bundle exec rails server"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: californica
+      DATABASE_USERNAME: californica
+      FEDORA_URL: http://fcrepo:8080/fcrepo/rest
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379/0
+      SOLR_URL: http://solr:8983/solr/californica
     ports:
       - "3000:3000"
+    volumes:
+      - ./californica:/californica
+      - bundle_dir:/bundle_dir
+    working_dir: /californica
 
   sidekiq:
     build:
       context: .
-      target: californica
-    volumes:
-      - ./californica:/californica
+    command: "bundle exec sidekiq"
     depends_on:
       - db
       - fcrepo
       - redis
       - solr
-    command: "bundle exec sidekiq"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: californica
+      DATABASE_USERNAME: californica
+      FEDORA_URL: http://fcrepo:8080/fcrepo/rest
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379/0
+      SOLR_URL: http://solr:8983/solr/californica
+    volumes:
+      - ./californica:/californica
+      - bundle_dir:/bundle_dir
+    working_dir: /californica
 
 volumes:
   mysql_data:
   solr_data:
   redis_data:
   fcrepo_data:
+  bundle_dir:
