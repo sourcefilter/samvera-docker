@@ -1,3 +1,6 @@
 [submodule "ursus"]
 	path = ursus
 	url = https://github.com/UCLALibrary/ursus
+[submodule "californica"]
+	path = californica
+	url = https://github.com/UCLALibrary/californica
