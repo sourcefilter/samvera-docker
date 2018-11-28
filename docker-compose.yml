@@ -46,7 +46,7 @@ services:
       - "3003:3000"
     volumes:
       - ./ursus:/ursus
-      - bundle_dir:/bundle_dir
+      - ursus_bundle_dir:/usr/local/bundle
     working_dir: /ursus
     environment:
       DATABASE_NAME: ursus_development
@@ -64,6 +64,7 @@ services:
       - db
       - fcrepo
       - redis
+      - sidekiq
       - solr
     environment:
       DATABASE_HOST: db
@@ -77,7 +78,7 @@ services:
       - "3000:3000"
     volumes:
       - ./californica:/californica
-      - bundle_dir:/bundle_dir
+      - californica_bundle_dir:/usr/local/bundle
     working_dir: /californica
 
   sidekiq:
@@ -96,10 +97,11 @@ services:
       FEDORA_URL: http://fcrepo:8080/fcrepo/rest
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379/0
       SOLR_URL: http://solr:8983/solr/californica
     volumes:
       - ./californica:/californica
-      - bundle_dir:/bundle_dir
+      - californica_bundle_dir:/usr/local/bundle
     working_dir: /californica
 
 volumes:
@@ -107,4 +109,5 @@ volumes:
   solr_data:
   redis_data:
   fcrepo_data:
-  bundle_dir:
+  ursus_bundle_dir:
+  californica_bundle_dir:

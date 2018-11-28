@@ -5,7 +5,7 @@ RUN gem install bundler
 # RUN bundle config --global frozen 1
 RUN apt-get update -qq && apt-get install -y mysql-client build-essential libpq-dev nodejs 
 
-ENV BUNDLE_PATH /bundle_dir
+ENV BUNDLE_PATH /usr/local/bundle
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
