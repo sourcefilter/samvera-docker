@@ -72,7 +72,6 @@ services:
       FEDORA_URL: http://fcrepo:8080/fcrepo/rest
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_URL: redis://redis:6379/0
       SOLR_URL: http://solr:8983/solr/californica
     ports:
       - "3000:3000"
@@ -97,7 +96,6 @@ services:
       FEDORA_URL: http://fcrepo:8080/fcrepo/rest
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      REDIS_URL: redis://redis:6379/0
       SOLR_URL: http://solr:8983/solr/californica
     volumes:
       - ./californica:/californica
