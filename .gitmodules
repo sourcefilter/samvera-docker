@@ -1,0 +1,3 @@
+[submodule "ursus"]
+	path = ursus
+	url = https://github.com/UCLALibrary/ursus
