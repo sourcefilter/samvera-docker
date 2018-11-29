@@ -1,0 +1,9 @@
+[submodule "ursus"]
+	path = ursus
+	url = https://github.com/UCLALibrary/ursus
+[submodule "californica"]
+	path = californica
+	url = https://github.com/UCLALibrary/californica
+[submodule "blacklight"]
+	path = blacklight
+	url = https://github.com/projectblacklight/blacklight
