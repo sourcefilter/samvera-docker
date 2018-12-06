@@ -4,7 +4,7 @@ services:
   fcrepo:
     image: cbeer/fcrepo4:4.7
     ports:
-      - 38080:8080
+      - 8080:8080
     volumes:
       - fcrepo_data:/data
     environment:
@@ -46,6 +46,7 @@ services:
       - "3003:3000"
     volumes:
       - ./ursus:/ursus
+      - ./.git/modules/ursus:/.git/modules/ursus
       - ursus_bundle_dir:/usr/local/bundle
     working_dir: /ursus
     environment:
@@ -96,7 +97,7 @@ services:
       DATABASE_PASSWORD: californica
       DATABASE_USERNAME: californica
       FEDORA_URL: http://fcrepo:8080/fcrepo/rest
-      GEONAMES_USERNAME: ''
+      GEONAMES_USERNAME: ""
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_URL: redis://redis:6379/0
