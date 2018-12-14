@@ -38,10 +38,10 @@ After this succeeds, you have a working development environment.
 
 To access some of the services that you'll need, try finding them at the following locations:
 
-* Californica -> http://172.17.0.1:3000/
-* Ursus -> http://172.17.0.1:3003/
-* Fedora -> http://172.17.0.1:8080/fcrepo/rest
-* Solr -> http://172.17.0.1:8983/solr/#/
+* Californica -> http://localhost:3000/
+* Ursus -> http://localhost:3003/
+* Fedora -> http://localhost:8080/fcrepo/rest
+* Solr -> http://localhost:8983/solr/#/
 
 ## Contact
 
